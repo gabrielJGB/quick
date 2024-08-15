@@ -5,6 +5,7 @@ import { useStateContext } from '../context/StateProvider'
 import { useRouter } from 'expo-router'
 import { useSettings } from '../context/SettingsProvider'
 import { fetchStreamerData } from '../utils/fetch'
+import { TouchableRipple } from 'react-native-paper'
 
 
 const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category, viewers, twoColumns, channelId }) => {
@@ -18,7 +19,7 @@ const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category
     const [proUri, setProfUri] = useState(profileUri)
     const { accentColor } = useSettings()
 
-    
+
 
     useEffect(() => {
 
@@ -35,28 +36,33 @@ const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category
     return (
         <View style={[s.container, { width: cardWidth }]}>
 
-            <TouchableNativeFeedback onPress={() => {
+            <TouchableRipple
                 
-                setSelectedStream(username)
-                setHeaderData({
-                    username,
-                    profileUri:proUri,
-                    sessionTitle,
-                    category,
-                    viewers,
-                    channelId
-                })
-                push(`user/${username}?channelId=${channelId}`)
-            }}>
+                onPress={() => {
+                    setSelectedStream(username)
+                    setHeaderData({
+                        username,
+                        profileUri: proUri,
+                        sessionTitle,
+                        category,
+                        viewers,
+                        channelId
+                    })
+                    push(`user/${username}?channelId=${channelId}`)
+                }}
+            >
                 <View>
                     <Image source={{ uri: thumbnailUri }} style={[s.thumbnail, { height: thumbnailHeight }]} />
                 </View>
-            </TouchableNativeFeedback>
+            </TouchableRipple>
 
-            <TouchableNativeFeedback onPress={() => {
-                setSelectedProfile(username)
-                push(`user/${username}?channelId=${channelId}`)
-            }}>
+            <TouchableRipple
+                rippleColor={accentColor}
+                onPress={() => {
+                    setSelectedProfile(username)
+                    push(`user/${username}?channelId=${channelId}`)
+                }}
+            >
                 <View style={s.streamData}>
                     {
                         proUri ?
@@ -72,7 +78,7 @@ const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category
                     </View>
                 </View>
 
-            </TouchableNativeFeedback>
+            </TouchableRipple>
 
             <View style={s.viewersContainer}>
                 <Text style={s.viewers}> {viewers}</Text>

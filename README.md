@@ -1,5 +1,8 @@
 # Quick
 
-Quick es un cliente frontend de Kick para Android programado en React Native
+![Logo](./logo.png)
 
-![Preview image](./preview.jpg)
+Quick es una alternativa frontend del servicio de streaming Kick, programado en React Native.
+
+
+![Preview image1](./preview.png)

@@ -40,6 +40,8 @@ const SearchTab = () => {
         textInput.current.focus()
         setText("")
         setResults(false)
+
+        
     }, []))
 
 
@@ -47,6 +49,7 @@ const SearchTab = () => {
         if(text === "")
             setResults(false)
     }, [text])
+    
     
 
     return (

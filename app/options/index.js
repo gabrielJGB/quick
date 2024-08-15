@@ -3,6 +3,7 @@ import React from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Button, Divider, IconButton } from 'react-native-paper'
 import { useSettings } from '../../context/SettingsProvider'
+import { getSettings, setSetting } from '../../utils/storage'
 
 const Options = () => {
 
@@ -11,6 +12,7 @@ const Options = () => {
   const params = useLocalSearchParams()
   const section = JSON.parse(params.section)
 
+  
 
   return (
     <View style={s.container}>
@@ -32,35 +34,31 @@ const Options = () => {
                   rippleColor='grey'
                   textColor='white'
                   contentStyle={s.buttonContent}
-                  onPress={() => {
+                  onPress={async () => {
 
                     if (section.key === 0) {
+
+                      await setSetting(0, option.code)
                       setSelectedLanguage(option.code)
 
                     } else if (section.key === 1) {
+
+                      await setSetting(1, option.code)
                       setAccentColor(option.code)
 
                     } else if (section.key === 2) {
+
+                      await setSetting(2, option.code)
                       setVideoQuality(option.code)
 
                     } else if (section.key === 3) {
+
+                      await setSetting(3, option.code)
                       setInitialTab(option.code)
                     }
+
                     back()
 
-                    // switch (section.key) { 
-                    //   case 0:
-                    //     setSelectedLanguage(option.code)
-                    //   case 1:
-                    //     setAccentColor(option.code)
-                    //   case 2:
-                    //     setVideoQuality(option.code) 
-                    //   case 3:
-                    //     setInitialTab(option.code)
-                    //   default:
-                    //     back()
-
-                    // }
                   }}
                 >
                   <View style={s.buttonBody}>

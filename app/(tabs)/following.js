@@ -17,14 +17,15 @@ export default function Tab() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
 
+  useFocusEffect(useCallback(() => {
+    // setLiveChannels([])
+    getLiveChannels()
+    
+  }, [selectedProfile]))
 
   useEffect(() => {
-    setLiveChannels([])
-    getLiveChannels()
-
-
   }, [])
-
+  
 
 
   const getLiveChannels = async () => {
@@ -33,10 +34,10 @@ export default function Tab() {
     const users = await getUsersFollowed()
     const arr = []
 
-    
-    if (users.length > 0){
 
-    
+    if (users.length > 0) {
+
+
       users.forEach((user, i) => {
 
         fetchLivestream(user.id)
@@ -46,8 +47,8 @@ export default function Tab() {
           .catch(error => setError(error))
       })
     }
-    else{
-      
+    else {
+
       setLoading(false)
     }
   }
@@ -61,7 +62,7 @@ export default function Tab() {
 
   return (
     <ScrollView refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={getLiveChannels} />
+      <RefreshControl refreshing={false} onRefresh={getLiveChannels} />
     }>
       <View style={s.container}>
 
@@ -88,7 +89,7 @@ export default function Tab() {
                   category={item.category.name}
                   channelId={1}
                   profileUri={false}
-                  thumbnailUri={`${item.thumbnail.src.replace("720.", "160.")}?_=${new Date().getTime()}`}
+                  thumbnailUri={`${item.thumbnail.src.replace("720.",!twoColumns?"360.":"160.")}?_=${new Date().getTime()}`}
                   sessionTitle={item.session_title}
                   username={item.username}
                   viewers={item.viewers}

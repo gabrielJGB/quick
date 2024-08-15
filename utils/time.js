@@ -3,7 +3,7 @@ export function formatDateToGMTMinus3(dateString) {
     const date = new Date(dateString);
 
 
-    const offsetDate = new Date(date.getTime() - 3 * 60 * 60 * 1000);
+    const offsetDate = new Date(date.getTime() -  60 * 60 * 1000);
 
 
     const options = {
@@ -36,26 +36,28 @@ export function formatDateString(dateString) {
     const daysOfWeek = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
     const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-    const date = new Date(dateString);
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
+    
+    return dateString.replaceAll("-","/")
+//     const date = new Date(dateString);
+//     const today = new Date();
+//     const yesterday = new Date();
+//     yesterday.setDate(today.getDate() - 1);
 
 
-    const cleanDate = date.toDateString();
-    const cleanToday = today.toDateString();
-    const cleanYesterday = yesterday.toDateString();
+//     const cleanDate = date.toDateString();
+//     const cleanToday = today.toDateString();
+//     const cleanYesterday = yesterday.toDateString();
 
-    if (cleanDate === cleanToday) {
-        return "Hoy";
-    } else if (cleanDate === cleanYesterday) {
-        return "Ayer";
-    } else {
-        const dayOfWeek = daysOfWeek[date.getDay()];
-        const day = date.getDate();
-        const month = months[date.getMonth()];
-        return `${dayOfWeek} ${day} de ${month}`;
-    }
+//     if (cleanDate === cleanToday) {
+//         return "Hoy";
+//     } else if (cleanDate === cleanYesterday) {
+//         return "Ayer";
+//     } else {
+//         const dayOfWeek = daysOfWeek[date.getDay()];
+//         const day = date.getDate();
+//         const month = months[date.getMonth()];
+//         return `${dayOfWeek} ${day} de ${month}`;
+//     }
 }
 
 

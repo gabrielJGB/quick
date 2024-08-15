@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Dimensions, Image, Linking, ScrollView, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import { useStateContext } from '../../../../context/StateProvider'
-import { useGlobalSearchParams, useLocalSearchParams, useRouter } from 'expo-router'
+import { useFocusEffect, useGlobalSearchParams, useLocalSearchParams, useRouter } from 'expo-router'
 import { Button, IconButton } from 'react-native-paper'
 import { addUser, clearUsersFollowed, getUsersFollowed, removeUser, userExists } from '../../../../utils/storage'
 import { fetchFollowers, fetchLivestream, fetchStreamerData, fetchStreamerLinks } from '../../../../utils/fetch'
@@ -32,7 +32,7 @@ const Info = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const { selectedProfile, setSelectedProfile, setSelectedStream, selectedStream, setHeaderData } = useStateContext()
-  const [following, setFollowing] = useState(null)
+  const [following, setFollowing] = useState(false)
   const [channelId, setChannelId] = useState(false)
 
 
@@ -44,6 +44,7 @@ const Info = () => {
 
   const checkFollowing = async (username) => {
     const followingUser = await userExists(username)
+    setFollowing(followingUser)
     setFollowing(followingUser)
   }
 
@@ -61,11 +62,13 @@ const Info = () => {
   }
 
 
-
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
+    checkFollowing(selectedProfile)
     checkFollowing(selectedProfile)
     setSelectedProfile(slug)
-  }, [])
+
+
+  }, [slug]))
 
   useEffect(() => {
 
@@ -78,7 +81,7 @@ const Info = () => {
       })
       .finally(() => setLoading(false))
 
-  }, [])
+  }, [slug])
 
   useEffect(() => {
 
@@ -92,7 +95,7 @@ const Info = () => {
       })
       .finally(() => setLoading(false))
 
-  }, [])
+  }, [slug])
 
 
   useEffect(() => {
@@ -106,7 +109,7 @@ const Info = () => {
       })
       .finally(() => setLoading(false))
 
-  }, [])
+  }, [slug])
 
 
   useEffect(() => {
@@ -137,7 +140,9 @@ const Info = () => {
               !streamerData || loading ?
                 <View style={s.profilePlaceholder}></View>
                 :
-                <Image source={{ uri: transformURL(streamerData.profilepic) || streamerData.profilepic, cache: "force-cache" }} style={s.profileImg} />
+                <Image
+                  source={{ uri: transformURL(streamerData.profilepic) || streamerData.profilepic, "cache": "force-cache" }}
+                  style={s.profileImg} />
             }
             <Text style={s.title1}>{slug}</Text>
           </View>
@@ -175,8 +180,8 @@ const Info = () => {
 
           <>
 
-            <Text style={s.isLive}>Transmitiendo {livestreamData.category.name} para {livestreamData.viewers} espectadores </Text>
 
+            <Text style={s.isLive}>Transmitiendo {livestreamData.category.name} para {livestreamData.viewers} espectadores </Text>
 
             <TouchableNativeFeedback onPress={() => {
               setSelectedStream(selectedProfile)
@@ -195,7 +200,7 @@ const Info = () => {
                   livestreamData &&
                   <Image
                     source={{ uri: `${livestreamData.thumbnail.src.replace("720.", "160.")}?_=${new Date().getTime()}` }}
-                    style={{ width: "62%", height: 140, borderRadius: 7, borderWidth: 1, borderColor: "#167714" }}
+                    style={{ width: "62%", height: 140, borderRadius: 7, borderWidth: 1, borderColor: "grey" }}
                   />
 
 
@@ -296,7 +301,7 @@ export default Info
 const s = StyleSheet.create({
   container: {
     flexDirection: "column",
-    paddingTop:5,
+    paddingTop: 5,
     paddingHorizontal: 14,
     marginBottom: 100
   },
@@ -305,7 +310,7 @@ const s = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 0,
-    
+
   },
   bio: {
     lineHeight: 18,
@@ -357,6 +362,7 @@ const s = StyleSheet.create({
     textAlign: "center",
   },
   thumbnail: {
+    marginTop: 10,
     flexDirection: "row",
 
 
@@ -393,7 +399,7 @@ const s = StyleSheet.create({
     fontSize: 13,
     color: "grey",
     marginTop: 7,
-    marginBottom: 8
+    marginBottom: 2
   },
   profileImg: {
     width: 30,

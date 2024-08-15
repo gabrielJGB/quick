@@ -8,12 +8,13 @@ import { fetchLivestream, fetchViewers } from '../utils/fetch'
 import { formatFollowersCount, getM3U8Content, parseM3U8Content, transformURL } from '../utils/stream'
 import { getTimeString } from '../utils/time'
 import VideoPlayer from './VideoPlayer'
+import { setSetting } from '../utils/storage'
 
 
 const Header = () => {
 
     const { push } = useRouter()
-    const { accentColor,videoQuality,setVideoQuality } = useSettings()
+    const { accentColor, videoQuality, setVideoQuality } = useSettings()
     const { selectedStream, setSelectedProfile, setSelectedStream, headerData } = useStateContext()
 
     const [playbackUrl, setPlaybackUrl] = useState(false)
@@ -27,6 +28,7 @@ const Header = () => {
     const [viewers, setViewers] = useState(false)
     const [time, setTime] = useState(false)
     const [createdAt, setCreatedAt] = useState(false)
+    const [minTitle, setMinTitle] = useState(false)
 
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
@@ -68,7 +70,7 @@ const Header = () => {
             .catch(error => setError(error.message))
             .finally(() => setLoading(false))
 
-    }, [selectedStream])
+    }, [selectedStream,videoQuality])
 
 
     useEffect(() => {
@@ -161,7 +163,9 @@ const Header = () => {
 
                     <View style={s.textContainer}>
                         <Text style={s.username}>{headerData.username}</Text>
-                        <Text numberOfLines={4} style={s.streamTitle}>{headerData.sessionTitle}</Text>
+                        <TouchableNativeFeedback onPress={()=>setMinTitle(!minTitle)}>
+                            <Text numberOfLines={minTitle?1:4} style={s.streamTitle}>{headerData.sessionTitle}</Text>
+                        </TouchableNativeFeedback>
                         <Text numberOfLines={1} style={s.category}>{headerData.category}</Text>
                     </View>
 
@@ -189,12 +193,14 @@ const Header = () => {
                             qualityArray.map((item, i) => (
                                 <Menu.Item
                                     key={i}
-                                    onPress={() => {
+                                    onPress={async () => {
+                                        await setSetting(2, qualityArray[i].resolution)
                                         setVideoQuality(qualityArray[i].resolution)
                                         setStreamUrl(qualityArray[i].url)
                                         setSelectedQuality(i)
                                         closeMenu()
                                     }}
+                                    
                                     title={item.resolution}
                                     leadingIcon={`checkbox${selectedQuality === i ? "-marked-circle" : "-blank-circle-outline"}`}
                                 />
@@ -279,7 +285,7 @@ const s = StyleSheet.create({
     textContainer: {
         flexDirection: "column",
         gap: 1,
-        width: "90%",
+        width: "85%",
 
 
     },

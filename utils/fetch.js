@@ -56,13 +56,13 @@ export const fetchStreamerLinks = async (username) => {
 }
 
 
-export const fetchFeatured = async (lang,limit) => {
+export const fetchFeatured = async (lang,subcategory,limit) => {
 
  
     try {
         // const url = `https://kick.com/stream/featured-livestreams/${lang}?page=${page}?_=${new Date().getTime()}`
         //              
-        const url = `https://kick.com/stream/livestreams/${lang}?page=1&limit=${limit}&subcategory=&sort=featured&strict=true`
+        const url = `https://kick.com/stream/livestreams/${lang}?page=1&limit=${limit}&subcategory=${subcategory}&sort=featured&strict=true`
 
         // const urll = `https://api.kick.com/private/v1/livestreams?languages=${lang}&sort=featured&order=desc&limit=${limit}&_=${new Date().getTime()}`
         const res = await fetch(url) 
@@ -73,6 +73,28 @@ export const fetchFeatured = async (lang,limit) => {
 
 
         return data
+
+    } catch (error) {
+        throw error
+    }
+
+}
+
+export const fetchCategories = async () => {
+
+ 
+    try {
+        // const url = `https://kick.com/stream/featured-livestreams/${lang}?page=${page}?_=${new Date().getTime()}`
+        //              
+        const url = `https://kick.com/api/v1/subcategories?limit=40`
+        const res = await fetch(url) 
+
+        if (res.status.error)
+            throw Error(res.status.message)
+
+        const data = await res.json()
+
+        return data.data
 
     } catch (error) {
         throw error

@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import { useStateContext } from '../../context/StateProvider'
 import { WebView } from 'react-native-webview'
-import { Button, DefaultTheme, Dialog, Divider, Icon, List, Portal, Switch, RadioButton } from 'react-native-paper'
+import { Button, DefaultTheme, Dialog, Divider, Icon, List, Portal, Switch, RadioButton, TouchableRipple } from 'react-native-paper'
 import { useRouter } from 'expo-router'
 import { useSettings } from '../../context/SettingsProvider'
 import languages from '../../languages.json'
@@ -21,7 +21,7 @@ const Settings = () => {
     },
     {
       key: 1,
-      name: "Color primario",
+      name: "Color principal",
       options: [
         { code: "#00ff00", name: "Verde" },
         { code: "#ff27ff", name: "Fucsia" },
@@ -52,31 +52,29 @@ const Settings = () => {
       {
         sections.map((item, i) => (
           <View key={i} style={s.section}>
-            <Button
-              style={{ borderRadius: 0, width: "100%", justifyContent: "center" }}
-              buttonColor='back'
-              rippleColor='grey'
-              textColor='white'
-              contentStyle={s.buttonContent}
+
+            <TouchableRipple
               onPress={() => {
                 push({
                   pathname: "/options",
                   params: { section: JSON.stringify(sections[i]) }
                 })
-
               }}
+              rippleColor="grey"
+              style={s.buttonContent}
             >
+
               <View style={s.button}>
                 <Text style={s.name}>{item.name}</Text>
                 <Text style={s.subname}>
-
 
                   {item.options.find(option => option.code === currentSettingsValue[i]).name}
 
                 </Text>
               </View>
 
-            </Button>
+            </TouchableRipple>
+
             <Divider style={{ backgroundColor: "#2c2c2c", width: "100%" }} />
           </View>
         ))
@@ -111,14 +109,12 @@ const s = StyleSheet.create({
     width: "100%"
   },
   buttonContent: {
-    paddingLeft: 5,
-    marginTop: 10,
-    paddingBottom: 10,
-    alignItems: "center",
-    justifyContent: "flex-start"
+    width: "100%",
+    paddingVertical: 16,
+    paddingLeft: 12
   },
   button: {
-    paddingTop: 10
+    // paddingTop: 10
   },
   name: {
     fontWeight: "500",

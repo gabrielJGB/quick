@@ -11,14 +11,15 @@ export default function TabLayout() {
 
 
   const { accentColor, initialTab } = useSettings()
-  const navigation = useNavigation()
+  const { navigate } = useNavigation()
   const iconSize = 26
 
   useEffect(() => {
-    if (initialTab === "following")
-      navigation.navigate("following")
 
-  }, [])
+    if (initialTab === "following")
+      navigate("following")
+
+  }, [initialTab])
 
 
 
