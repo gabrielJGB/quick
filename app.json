@@ -1,15 +1,16 @@
 {
   "expo": {
-    "name": "quick",
+    "name": "Quick",
     "slug": "quick",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "app-scheme",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1c1c1c"
     },
     "ios": {
       "supportsTablet": true
@@ -17,11 +18,23 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#1c1c1c"
+      },
+      "package": "com.gabriel_1.quick"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4394a633-433e-4159-9169-2d5eba906f94"
+      }
     }
   }
 }
