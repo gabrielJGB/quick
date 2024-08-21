@@ -29,7 +29,9 @@ export default function Layout() {
     const [refresh, setRefresh] = useState(false)
     const [loadingSettings, seLoadingSettings] = useState(true)
     const [selectedCategory, setSelectedCategory] = useState("")
-    const featuredCount = 35
+    const [selectedPage,setSelectedPage] = useState(1)
+    const [selectedOrder,setSelectedOrder] = useState("featured")
+    const featuredCount = 42
 
     useEffect(() => {
         getSettings()
@@ -49,14 +51,15 @@ export default function Layout() {
             if (!loadingSettings) {
                 setError(false)
                 setLoadingFeatured(true)
-                fetchFeatured(selectedLanguage,selectedCategory, featuredCount)
+                fetchFeatured(selectedLanguage,selectedCategory, featuredCount, selectedPage,selectedOrder)
                     .then(res => setFeaturedStreams(res.data))
                     .catch(error => setError(error.message))
                     .finally(() => {setLoadingFeatured(false)})
             }
-        }, [selectedLanguage,selectedCategory,loadingSettings, refresh]))
+        }, [selectedLanguage,selectedCategory,loadingSettings, refresh, selectedPage,selectedOrder]))
 
-    
+    if(loadingFeatured)
+        return <ActivityIndicator size={22} color="white" style={{ marginVertical: 100, width: "100%" }} />
 
     if (error)
         return (
@@ -77,6 +80,8 @@ export default function Layout() {
             headerData, setHeaderData,
             setRefresh,
             selectedCategory, setSelectedCategory,
+            selectedPage,setSelectedPage,
+            selectedOrder,setSelectedOrder
         }}>
             <ThemeProvider value={{
                 dark: true,
@@ -131,7 +136,7 @@ const s = StyleSheet.create({
     },
     errorTitle: {
         textAlign: "center",
-        fontSize: 33,
+        fontSize: 23,
         color: "white"
     },
     errorDescription: {

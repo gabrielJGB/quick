@@ -23,7 +23,7 @@ const Card = ({ title, value, url }) => {
 const Info = () => {
 
   const { accentColor } = useSettings()
-  const { back } = useRouter()
+  const { back, push } = useRouter()
   const { slug } = useLocalSearchParams()
   const [streamerData, setStreamerData] = useState(false)
   const [streamerLinks, setStreamerLinks] = useState(false)
@@ -46,6 +46,7 @@ const Info = () => {
     const followingUser = await userExists(username)
     setFollowing(followingUser)
     setFollowing(followingUser)
+    setFollowing(followingUser)
   }
 
   const manageFollowButton = async (username) => {
@@ -64,11 +65,11 @@ const Info = () => {
 
   useFocusEffect(useCallback(() => {
     checkFollowing(selectedProfile)
-    checkFollowing(selectedProfile)
+
     setSelectedProfile(slug)
 
 
-  }, [slug]))
+  }, [slug, selectedProfile]))
 
   useEffect(() => {
 
@@ -134,15 +135,22 @@ const Info = () => {
       <View style={s.header}>
         <IconButton icon="arrow-left" iconColor="white" onPress={() => back()} />
         {
-          !loading && selectedProfile != selectedStream &&
+          
           <View style={s.info}>
             {
               !streamerData || loading ?
                 <View style={s.profilePlaceholder}></View>
                 :
-                <Image
-                  source={{ uri: transformURL(streamerData.profilepic) || streamerData.profilepic, "cache": "force-cache" }}
-                  style={s.profileImg} />
+                <TouchableNativeFeedback onPress={() => {
+                  push({
+                    pathname:"/image",
+                    params:{ imageUri: transformURL(streamerData.profilepic) }
+                  })
+                }}>
+                  <Image
+                    source={{ uri: transformURL(streamerData.profilepic) || streamerData.profilepic, "cache": "force-cache" }}
+                    style={s.profileImg} />
+                </TouchableNativeFeedback>
             }
             <Text style={s.title1}>{slug}</Text>
           </View>

@@ -99,10 +99,10 @@ const Header = () => {
 
     useEffect(() => {
 
-        setTime(getTimeString(createdAt))
+        setTime(getTimeString(createdAt,0))
 
         let interval = setInterval(() => {
-            setTime(getTimeString(createdAt))
+            setTime(getTimeString(createdAt,0))
         }, 1000 * 30);
         return () => clearInterval(interval)
 

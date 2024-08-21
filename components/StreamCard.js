@@ -8,7 +8,7 @@ import { fetchStreamerData } from '../utils/fetch'
 import { TouchableRipple } from 'react-native-paper'
 
 
-const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category, viewers, twoColumns, channelId }) => {
+const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category, viewers, twoColumns, channelId, liveTime }) => {
 
     const { push } = useRouter()
     const { setSelectedStream, setSelectedProfile, setHeaderData } = useStateContext()
@@ -18,27 +18,37 @@ const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category
     const [loading, setLoading] = useState(true)
     const [proUri, setProfUri] = useState(profileUri)
     const { accentColor } = useSettings()
-
+    const [pressIn, setPressIn] = useState(false)
 
 
     useEffect(() => {
 
         if (!profileUri)
-            fetchStreamerData(username.replace("_", "-"))
+            fetchStreamerData(username.replaceAll("_", "-"))
                 .then(res => { setProfUri(res.profilepic) })
                 .catch(error => { setProfUri(false) })
                 .finally(() => setLoading(false))
         else
             setProfUri(profileUri)
 
+        return () => setPressIn(false)
     }, [profileUri])
 
     return (
-        <View style={[s.container, { width: cardWidth }]}>
+
+        <View style={[s.container, {
+            width: cardWidth,
+            transform: pressIn ? "scale(0.95)" : "none",
+
+        }]}>
 
             <TouchableRipple
-                
+
+                onPressOut={() => setPressIn(false)}
+                onPressIn={() => setPressIn(true)}
+
                 onPress={() => {
+
                     setSelectedStream(username)
                     setHeaderData({
                         username,
@@ -57,7 +67,8 @@ const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category
             </TouchableRipple>
 
             <TouchableRipple
-                rippleColor={accentColor}
+                onPressIn={() => setPressIn(true)}
+                onPressOut={() => setPressIn(false)}
                 onPress={() => {
                     setSelectedProfile(username)
                     push(`user/${username}?channelId=${channelId}`)
@@ -73,7 +84,7 @@ const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category
 
                     <View style={s.textContainer}>
                         <Text style={s.username}>{username}</Text>
-                        <Text numberOfLines={1} style={s.streamTitle}>{sessionTitle}</Text>
+                        <Text numberOfLines={2} style={s.streamTitle}>{sessionTitle}</Text>
                         <Text numberOfLines={1} style={s.category}>{category}</Text>
                     </View>
                 </View>
@@ -85,7 +96,12 @@ const StreamCard = ({ thumbnailUri, profileUri, username, sessionTitle, category
                 <Text style={[s.dot, { backgroundColor: accentColor }]}>{"."}</Text>
             </View>
 
+            <View style={s.timeContainer}>
+                <Text style={s.time}> {liveTime}</Text>
+            </View>
+
         </View>
+
     )
 }
 
@@ -93,7 +109,7 @@ export default StreamCard
 
 const s = StyleSheet.create({
     container: {
-
+        alignSelf: "stretch",
         display: "flex",
         flexDirection: "column",
         width: "100%",
@@ -141,11 +157,22 @@ const s = StyleSheet.create({
         fontWeight: "500",
 
     },
+    dot: {
+        width: 5,
+        height: 5,
+        borderRadius: 5,
+        
+    },
+    viewers: {
+        fontSize: 11,
+        fontWeight: "500",
+        color: "white"
+    },
     viewersContainer: {
         position: "absolute",
-        backgroundColor: "black",
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
         borderWidth: 1,
-        borderColor: "grey",
+        borderColor: "#3c3c3c",
         borderRadius: 5,
         paddingLeft: 1,
         paddingRight: 3,
@@ -155,16 +182,24 @@ const s = StyleSheet.create({
         alignItems: "center",
         gap: 4
     },
-    dot: {
-        width: 5,
-        height: 5,
+    timeContainer: {
+        position: "absolute",
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        borderWidth: 1,
+        borderColor: "#3c3c3c",
         borderRadius: 5,
-
+        paddingLeft: 1,
+        paddingRight: 3,
+        top: 5,
+        left: 5,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4
     },
-    viewers: {
-        fontSize: 13,
+    time: {
+        color: "white",
+        fontSize: 11,
         fontWeight: "500",
-        color: "white"
     }
 
 })

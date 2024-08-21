@@ -5,10 +5,13 @@ import StreamCard from '../../components/StreamCard';
 import ColumnsButton from '../../components/ColumnsButton';
 import { useState } from 'react';
 import CategoryPicker from '../../components/CategoryPicker';
+import { IconButton } from 'react-native-paper';
+import { getTimeString } from '../../utils/time';
+import OrderPicker from '../../components/OrderPicker';
 
 export default function Tab() {
 
-  const { featuredStreams, loadingFeatured, setRefresh } = useStateContext()
+  const { featuredStreams, loadingFeatured, setRefresh, selectedPage, setSelectedPage } = useStateContext()
   const [twoColumns, setTwoColumns] = useState(true)
 
   return (
@@ -28,10 +31,10 @@ export default function Tab() {
           <ColumnsButton twoColumns={twoColumns} setTwoColumns={setTwoColumns} />
         </View>
 
-
-        <CategoryPicker />
-
-
+        <View style={s.pickerContainer}>
+          <CategoryPicker />
+          <OrderPicker />
+        </View>
         {
           loadingFeatured ?
             <ActivityIndicator size={22} color="white" style={{ width: "99%", marginTop: 50 }} />
@@ -52,6 +55,7 @@ export default function Tab() {
                       profileUri={stream.channel.user.profilepic}
                       channelId={stream.channel.id}
                       twoColumns={twoColumns}
+                      liveTime={getTimeString(stream.created_at, -3)}
                     />
                   ))
                   :
@@ -62,13 +66,51 @@ export default function Tab() {
 
         }
 
+
+        <View style={s.arrows}>
+          {
+            selectedPage > 1 ?
+              <IconButton
+                onPress={() => { setSelectedPage(prev => prev - 1) }}
+                icon="chevron-left"
+                iconColor='white'
+                size={22}
+              />
+              : <View style={{ width: 50 }}></View>
+
+          }
+          <Text onPress={() => setSelectedPage(1)} style={s.pageText}>Página {selectedPage}</Text>
+
+          <IconButton
+            onPress={() => { setSelectedPage(prev => prev + 1) }}
+            icon="chevron-right"
+            iconColor='white'
+            size={22}
+          />
+
+        </View>
+
       </View>
+
+
     </ScrollView>
 
   );
 }
 
 const s = StyleSheet.create({
+  arrows: {
+    width: "90%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 10,
+    padding: 7,
+  },
+  pageText: {
+    color: "grey",
+    fontSize: 15,
+  },
   container: {
     display: "flex",
     flexDirection: "column",
@@ -102,5 +144,9 @@ const s = StyleSheet.create({
     paddingHorizontal: 8,
     marginVertical: 12,
 
+  },
+  pickerContainer:{
+    width:"100%",
+    flexDirection:"row"
   }
 });

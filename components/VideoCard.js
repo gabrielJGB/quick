@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import React from 'react'
 import { useRouter } from 'expo-router'
-import { formatDateString, formatDateToGMTMinus3, formatMillisecondsToTimeString } from '../utils/time'
+import { formatDateString, formatMillisecondsToTimeString } from '../utils/time'
 
 const VideoCard = ({ video }) => {
 
@@ -12,7 +12,7 @@ const VideoCard = ({ video }) => {
 
         <TouchableNativeFeedback onPress={() => push({
             pathname: "/player",
-            params: { url: video.source }
+            params: { url: video.source,title:video.session_title,isClip:false }
         })}>
 
             <View style={s.container}>
@@ -40,7 +40,7 @@ const s = StyleSheet.create({
         flexDirection: "column",
         borderRadius: 7,
         borderWidth: 1,
-        borderColor: "#3c3c3c",
+        borderColor: "#252525",
 
     },
     img: {

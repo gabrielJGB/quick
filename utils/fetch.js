@@ -56,15 +56,13 @@ export const fetchStreamerLinks = async (username) => {
 }
 
 
-export const fetchFeatured = async (lang,subcategory,limit) => {
+export const fetchFeatured = async (lang,subcategory,limit,page,selectedOrder) => {
 
+    const strict = false
  
     try {
-        // const url = `https://kick.com/stream/featured-livestreams/${lang}?page=${page}?_=${new Date().getTime()}`
-        //              
-        const url = `https://kick.com/stream/livestreams/${lang}?page=1&limit=${limit}&subcategory=${subcategory}&sort=featured&strict=true`
-
-        // const urll = `https://api.kick.com/private/v1/livestreams?languages=${lang}&sort=featured&order=desc&limit=${limit}&_=${new Date().getTime()}`
+        
+        const url = `https://kick.com/stream/livestreams/${lang}?page=${page}&limit=${limit}&subcategory=${subcategory}&sort=${selectedOrder}&strict=${strict}`
         const res = await fetch(url) 
 
         if (res.status.error)
@@ -84,8 +82,7 @@ export const fetchCategories = async () => {
 
  
     try {
-        // const url = `https://kick.com/stream/featured-livestreams/${lang}?page=${page}?_=${new Date().getTime()}`
-        //              
+        
         const url = `https://kick.com/api/v1/subcategories?limit=40`
         const res = await fetch(url) 
 
@@ -152,10 +149,11 @@ export const fetchUser = async (slug) => {
 }
 
 
-export const fetchUserClips = async (slug) => {
+export const fetchUserClips = async (slug,time) => {
+
 
     try {
-        const url = `https://kick.com/api/v2/channels/${slug}/clips`
+        const url = `https://kick.com/api/v2/channels/${slug}/clips??cursor=0&sort=view&time=${time}`
         const res = await fetch(url)
         const data = await res.json()
         return data

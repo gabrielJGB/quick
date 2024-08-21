@@ -86,7 +86,7 @@ export const getSettings = async () => {
 };
 
 
-const setSettingsFile = async () => {
+export const setSettingsFile = async () => {
 
     try {
 

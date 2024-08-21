@@ -1,11 +1,13 @@
 import { Image, ScrollView, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Icon, IconButton, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Icon, IconButton, TextInput, ToggleButton } from 'react-native-paper';
 import { fetchSearchQuery } from '../../utils/fetch';
 import { useStateContext } from '../../context/StateProvider';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useSettings } from '../../context/SettingsProvider';
 import { DarkTheme } from '@react-navigation/native';
+import { userExists } from '../../utils/storage';
+import { formatFollowersCount } from '../../utils/stream';
 
 const SearchTab = () => {
     const profileImgSize = 32
@@ -38,19 +40,24 @@ const SearchTab = () => {
 
     useFocusEffect(useCallback(() => {
         textInput.current.focus()
-        setText("")
-        setResults(false)
-
         
     }, []))
 
 
     useEffect(() => {
-        if(text === "")
+        if (text === "")
             setResults(false)
+
+
+
     }, [text])
-    
-    
+
+
+    const _userExists = async (username) => {
+        const x = await userExists(username)
+
+        return x
+    }
 
     return (
         <View style={s.container}>
@@ -89,12 +96,18 @@ const SearchTab = () => {
                                         <View style={s.channel}>
                                             <View style={s.left}>
                                                 <Image source={{ uri: channel.user.profilePic }} style={[s.profileImg, { width: profileImgSize, height: profileImgSize }]} />
-                                                <Text style={s.result}>{channel.user.username}</Text>
+                                                <View style={s.info}>
+                                                    <View style={s.username}>
+                                                        <Text style={s.result}>{channel.user.username}</Text>
+                                                        {
+                                                            channel.verified != null &&
+                                                            <Icon source="checkbox-marked-circle" color={accentColor} size={16} />
+                                                        }
+                                                    </View>
+                                                    <Text style={s.followers}>{formatFollowersCount(channel.followersCount)} seguidores</Text>
+                                                </View>
 
-                                                {
-                                                    channel.verified != null &&
-                                                    <Icon source="checkbox-marked-circle" color={accentColor} size={16} />
-                                                }
+
                                             </View>
                                             <View style={s.right}>
                                                 {
@@ -102,6 +115,20 @@ const SearchTab = () => {
                                                     <Text style={s.liveText}>EN VIVO</Text>
 
                                                 }
+
+                                                {/* 
+                                                {
+                                                    <IconButton
+                                                        onPress={() => { }}
+                                                        style={{ borderRadius: 7 }}
+                                                        value={true}
+                                                        icon={`heart${_userExists(channel.slug).then(r=>{return r}) ? "-outline" : ""}`}
+                                                        iconColor='black'
+                                                        containerColor={accentColor}
+                                                        size={16}
+                                                    />
+
+                                                } */}
                                             </View>
                                         </View>
                                     </TouchableNativeFeedback>
@@ -150,7 +177,7 @@ const s = StyleSheet.create({
     },
     left: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         gap: 7,
     },
     liveText: {
@@ -175,6 +202,19 @@ const s = StyleSheet.create({
         marginTop: 100,
         textAlign: "center",
         color: "white"
+    },
+    info: {
+        flexDirection: "column",
+        gap: 0
+    },
+    followers: {
+        fontSize: 11,
+        color: "grey"
+    },
+    username: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 7
     }
 
 })

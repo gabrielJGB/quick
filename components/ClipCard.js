@@ -12,7 +12,7 @@ const ClipCard = ({ clip }) => {
 
         <TouchableNativeFeedback onPress={() => push({
             pathname: "/player",
-            params: { url: clip.video_url }
+            params: { url: clip.video_url,title:clip.title,isClip:true }
         })}>
 
             <View style={s.container}>
@@ -24,7 +24,8 @@ const ClipCard = ({ clip }) => {
                         <Text style={s.title}>{clip.title}</Text>
                         <Text style={s.creator}>Fecha: {formatDateToGMTMinus3(clip.created_at)}</Text>
                         <Text style={s.creator}>Autor: {clip.creator.username}</Text>
-                        <Text style={s.creator}>Duración: {clip.duration}s</Text>
+                        <Text style={s.creator}>{clip.duration} segundos</Text>
+                        <Text style={s.creator}>{clip.views} vistas</Text>
                     </View>
                 </View>
             </View>
@@ -40,7 +41,7 @@ const s = StyleSheet.create({
         flexDirection: "column",
         borderRadius: 7,
         borderWidth: 1,
-        borderColor: "#3c3c3c",
+        borderColor: "#252525",
 
     },
     img: {

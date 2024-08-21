@@ -2,9 +2,9 @@ export function formatDateToGMTMinus3(dateString) {
 
     const date = new Date(dateString);
 
-
+    
     const offsetDate = new Date(date.getTime() -  60 * 60 * 1000);
-
+    
 
     const options = {
         weekday: 'short',
@@ -13,6 +13,7 @@ export function formatDateToGMTMinus3(dateString) {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false, // Formato de 24 horas
+        year:'2-digit'
     };
 
 
@@ -37,7 +38,12 @@ export function formatDateString(dateString) {
     const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
     
+    
     return dateString.replaceAll("-","/")
+
+
+
+
 //     const date = new Date(dateString);
 //     const today = new Date();
 //     const yesterday = new Date();
@@ -61,12 +67,12 @@ export function formatDateString(dateString) {
 }
 
 
-export const getTimeString = (dateString) => {
+export const getTimeString = (dateString,diferenciaGMT) => {
     if (!dateString)
         return ""
 
     const fechaInicio = new Date(dateString);
-    const diferenciaGMT = 0;
+    
     fechaInicio.setHours(fechaInicio.getHours() + diferenciaGMT);
     const ahora = new Date();
     const diferencia = ahora - fechaInicio;

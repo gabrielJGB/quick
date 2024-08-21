@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
-import { Tabs, useNavigation } from 'expo-router'
+import React, { useCallback, useEffect } from 'react'
+import { Tabs, useFocusEffect, useNavigation } from 'expo-router'
 import { Icon } from 'react-native-paper';
 import { useStateContext } from '../../../../context/StateProvider';
 import { useSettings } from '../../../../context/SettingsProvider';
@@ -13,15 +13,11 @@ const Layout = () => {
     const { selectedProfile, selectedStream } = useStateContext()
     const { navigate } = useNavigation()
 
-    useEffect(() => {
-
-        if (selectedProfile === selectedStream) {
-            navigate("chat")
-        }
+    useFocusEffect(useCallback(()=>{
         
-        
-
-    }, [])
+        // if (selectedProfile === selectedStream) 
+        //     navigate("chat")
+    },[]))
 
     return (
         <Tabs screenOptions={{

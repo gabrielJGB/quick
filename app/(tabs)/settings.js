@@ -6,6 +6,7 @@ import { Button, DefaultTheme, Dialog, Divider, Icon, List, Portal, Switch, Radi
 import { useRouter } from 'expo-router'
 import { useSettings } from '../../context/SettingsProvider'
 import languages from '../../languages.json'
+import { setSettingsFile } from '../../utils/storage'
 
 const Settings = () => {
 
@@ -25,10 +26,10 @@ const Settings = () => {
       options: [
         { code: "#00ff00", name: "Verde" },
         { code: "#ff27ff", name: "Fucsia" },
-        { code: "#d8151a", name: "Rojo" },
+        { code: "#f91f24", name: "Rojo" },
         { code: "#ffff11", name: "Amarillo" },
-        { code: "#ffa500", name: "Naranja" },
-        { code: "#1e5df7", name: "Azul" },
+        { code: "#ff8f00", name: "Naranja" },
+        { code: "#3860ff", name: "Azul" },
         { code: "#19ffff", name: "Aqua" },
         { code: "#9b5aff", name: "Violeta" },
 
@@ -79,6 +80,19 @@ const Settings = () => {
           </View>
         ))
       }
+
+      <TouchableRipple
+        onPress={ async () => await setSettingsFile() }
+        rippleColor="grey"
+        style={s.buttonContent}
+      >
+
+        <View style={s.button}>
+          <Text style={s.name}>Resetear configuración</Text>
+
+        </View>
+
+      </TouchableRipple>
 
     </View>
 

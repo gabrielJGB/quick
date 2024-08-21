@@ -7,14 +7,14 @@ import { ActivityIndicator } from 'react-native-paper'
 
 const CategoryPicker = () => {
 
-    const { selectedCategory, setSelectedCategory } = useStateContext()
+    const { selectedCategory, setSelectedCategory,setSelectedPage } = useStateContext()
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(true)
 
 
 
     useEffect(() => {
-
+        setSelectedPage(1)
         fetchCategories()
             .then(resp => setCategories(resp))
             .finally(() => setLoading(false))
@@ -47,7 +47,7 @@ const CategoryPicker = () => {
                             key={i}
                             color='white'
                             style={s.item}
-                            label={`${category.name}`}
+                            label={`${category.name}  (${category.viewers} viewers)`}
                             value={category.slug} />
                     ))
                 }
@@ -71,7 +71,7 @@ export default CategoryPicker
 const s = StyleSheet.create({
     container: {
         borderRadius:10,
-        width: "80%",
+        width: "50%",
         marginBottom:10,
     },
     picker: {
@@ -81,7 +81,7 @@ const s = StyleSheet.create({
         borderColor: "white"
     },
     item: {
-        fontSize:13,
+        fontSize:12,
         backgroundColor: "black",
 
     }
